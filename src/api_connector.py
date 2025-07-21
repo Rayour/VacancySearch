@@ -25,47 +25,44 @@ logger = logging.getLogger("api_connector")
 class ApiConnector(ABC):
     """Абстрактный класс для API взаимодействий"""
 
-    url: str
-    params: dict
-    headers: dict
-
-    def __init__(self, params: dict | None = None, headers: dict | None = None):
-        """Метод инициализации объекта абстрактного класса API взаимодействия"""
-
-        self.params = params if params else {}
-        self.headers = headers if headers else {}
-
     @abstractmethod
-    def get_data(self) -> list:
+    def _get_data(self) -> list:
         """Метод для получения данных по API"""
         pass
 
 
 class HHApiConnector(ApiConnector):
+    """Класс для работы с api HH"""
 
-    def get_data(self) -> list:
+    __url: str
+    __params: dict
+    __headers: dict
+
+    def __init__(self, params: dict | None = None, headers: dict | None = None):
+        """Метод инициализации объекта абстрактного класса API взаимодействия"""
+
+        self.__url = "https://api.hh.ru/vacancies"
+        self.__params = params if params else {}
+        self.__headers = headers if headers else {}
+
+    def _get_data(self) -> list:
         data = []
         max_page = 1
-        self.params["page"] = 0
-        self.params["per_page"] = 100
-        self.headers["User-Agent"] = "PostmanRuntime/7.44.1"
+        self.__params["page"] = 0
+        self.__params["per_page"] = 100
+        self.__headers["User-Agent"] = "PostmanRuntime/7.44.1"
 
-        while self.params["page"] < max_page:
+        while self.__params["page"] < max_page:
             try:
                 logger.info(
-                    f"Запрос страницы {self.params["page"]} c вакансиями по ключевому слову {self.params["text"]}")
-                response = requests.get("https://api.hh.ru/vacancies", params=self.params, headers=self.headers)
+                    f"Запрос страницы {self.__params["page"]} c вакансиями по ключевому слову {self.__params["text"]}")
+                response = requests.get(self.__url, params=self.__params, headers=self.__headers)
             except requests.RequestException as e:
-                logger.critical(f"Ошибка при запрос страницы {self.params["page"]} c вакансиями по ключевому \
-слову {self.params["text"]}: {e}")
+                logger.critical(f"Ошибка при запрос страницы {self.__params["page"]} c вакансиями по ключевому \
+слову {self.__params["text"]}: {e}")
             else:
-                self.params["page"] += 1
+                self.__params["page"] += 1
                 max_page = response.json()["pages"]
                 data.extend(response.json()["items"])
 
         return data
-
-
-if __name__ == "__main__":
-    api_hh = HHApiConnector({"text": "python"})
-    print(len(api_hh.get_data()))

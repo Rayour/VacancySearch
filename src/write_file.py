@@ -48,7 +48,7 @@ class WriteDataToJson(WriteDataToFile):
 
         try:
             with open(os.path.join(ROOT_PATH, self.file_path), 'w', encoding='utf-8') as file:
-                json.dump(self.data, file, indent=4)
+                json.dump(self.data, file, ensure_ascii=False, indent=4)
         except TypeError as e:
             logger.critical(f"Некорректный JSON: {e}")
 
