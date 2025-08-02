@@ -10,6 +10,7 @@ ROOT_PATH = Path(__file__).resolve().parents[1]
 date_today = datetime.datetime.today().strftime("%d-%m-%Y")
 file_name = f"{date_today}_logs.log"
 log_path = os.path.join(ROOT_PATH, "logs", file_name)
+default_file_path = os.path.join(ROOT_PATH, "data", "vacancies.json")
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -25,15 +26,6 @@ logger = logging.getLogger("write_file")
 class WriteDataToFile(ABC):
     """Абстрактный класс для сохранения данных в файл"""
 
-    data: Any
-    file_path: str
-
-    def __init__(self, data: Any, file_path: str) -> None:
-        """Метод инициализации объекта абстрактного класса для записи данных в файл"""
-
-        self.data = data
-        self.file_path = file_path
-
     @abstractmethod
     def write_data(self) -> None:
         """Абстрактный метод для записи данных в файл"""
@@ -43,14 +35,56 @@ class WriteDataToFile(ABC):
 class WriteDataToJson(WriteDataToFile):
     """Класс для записи данных в JSON файл"""
 
+    data: Any
+    __file_path: str
+
+    def __init__(self, data: Any, file_path: str = default_file_path) -> None:
+        """Метод инициализации объекта абстрактного класса для записи данных в файл"""
+
+        self.data = data
+        self.__file_path = file_path
+
     def write_data(self) -> None:
         """Метод для сохранения данных в JSON файл"""
 
         try:
-            with open(os.path.join(ROOT_PATH, self.file_path), 'w', encoding='utf-8') as file:
-                json.dump(self.data, file, ensure_ascii=False, indent=4)
+            with open(os.path.join(ROOT_PATH, self.__file_path), 'r', encoding='utf-8') as file:
+                vacancy_list = json.load(file)
+        except FileNotFoundError as e:
+            vacancy_list = []
+            logger.info(f"Файл {self.__file_path} не найден: {e}, будет создан новый список")
+        except TypeError as e:
+            vacancy_list = []
+            logger.warning(f"В файле {self.__file_path} некорректный JSON: {e}, список вакансий будет перезаписан")
+        finally:
+            ids = [item["id"] for item in vacancy_list]
+            for vacancy in self.data:
+                if not vacancy["id"] in ids:
+                    ids.append(vacancy["id"])
+                    vacancy_list.append(vacancy)
+
+        try:
+            with open(os.path.join(ROOT_PATH, self.__file_path), 'w', encoding='utf-8') as file:
+                logger.info(f"Попытка записи данных в файл {self.__file_path}")
+                json.dump(vacancy_list, file, ensure_ascii=False, indent=4)
         except TypeError as e:
             logger.critical(f"Некорректный JSON: {e}")
+        except Exception as e:
+            logger.critical(f"При записи данных в файл произошла ошибка: {e}")
+        else:
+            logger.info(f"Данные успешно записаны в файл {self.__file_path}")
+
+    def delete_data(self) -> None:
+        """Метод для удаления данных из файла"""
+
+        try:
+            with open(os.path.join(ROOT_PATH, self.__file_path), 'w', encoding='utf-8') as file:
+                logger.info(f"Попытка удаления данных из файла {self.__file_path}")
+                file.write("")
+        except Exception as e:
+            logger.critical(f"При удалении данных из файла произошла ошибка: {e}")
+        else:
+            logger.info(f"Данные успешно удалены из файла {self.__file_path}")
 
 
 if __name__ == "__main__":
