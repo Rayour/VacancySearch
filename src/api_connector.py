@@ -3,6 +3,7 @@ import logging
 import os.path
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Any
 
 import requests
 
@@ -45,24 +46,32 @@ class HHApiConnector(ApiConnector):
         self.__params = params if params else {}
         self.__headers = headers if headers else {}
 
+    def __api_connector(self) -> Any:
+        """Метод для подключения к API HH"""
+        try:
+            logger.info(
+                f"Запрос страницы {self.__params["page"]} c вакансиями по ключевому слову {self.__params["text"]}")
+            response = requests.get(self.__url, params=self.__params, headers=self.__headers)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            logger.critical(f"Ошибка при запрос страницы {self.__params["page"]} c вакансиями по ключевому \
+слову {self.__params["text"]}: {e}")
+        else:
+            return response.json()
+
     def _get_data(self) -> list:
+        """Метод для получения данных по API HH"""
         data = []
         max_page = 1
+        self.__params["currency"] = "RUR"
         self.__params["page"] = 0
         self.__params["per_page"] = 100
         self.__headers["User-Agent"] = "PostmanRuntime/7.44.1"
 
         while self.__params["page"] < max_page:
-            try:
-                logger.info(
-                    f"Запрос страницы {self.__params["page"]} c вакансиями по ключевому слову {self.__params["text"]}")
-                response = requests.get(self.__url, params=self.__params, headers=self.__headers)
-            except requests.RequestException as e:
-                logger.critical(f"Ошибка при запрос страницы {self.__params["page"]} c вакансиями по ключевому \
-слову {self.__params["text"]}: {e}")
-            else:
-                self.__params["page"] += 1
-                max_page = response.json()["pages"]
-                data.extend(response.json()["items"])
+            response = self.__api_connector()
+            self.__params["page"] += 1
+            max_page = response["pages"]
+            data.extend(response["items"])
 
         return data
