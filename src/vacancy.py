@@ -90,6 +90,11 @@ class Vacancy:
         return self.__avg_salary
 
     @property
+    def name(self) -> str:
+        """Свойство названия"""
+        return self.__name
+
+    @property
     def requirement(self) -> str | None:
         """Свойство требований"""
         return self.__requirement
