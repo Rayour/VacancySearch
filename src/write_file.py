@@ -47,15 +47,16 @@ class WriteDataToJson(WriteDataToFile):
     def write_data(self) -> None:
         """Метод для сохранения данных в JSON файл"""
 
+        vacancy_list = []
+
         try:
             with open(os.path.join(ROOT_PATH, self.__file_path), 'r', encoding='utf-8') as file:
                 vacancy_list = json.load(file)
         except FileNotFoundError as e:
-            vacancy_list = []
             logger.info(f"Файл {self.__file_path} не найден: {e}, будет создан новый список")
-        except TypeError as e:
-            vacancy_list = []
-            logger.warning(f"В файле {self.__file_path} некорректный JSON: {e}, список вакансий будет перезаписан")
+        except Exception as e:
+            logger.warning(f"При попытке чтения данных из файла {self.__file_path} произошла ошибка: {e}, \
+список вакансий будет перезаписан")
         finally:
             ids = [item["id"] for item in vacancy_list]
             for vacancy in self.data:
@@ -85,6 +86,12 @@ class WriteDataToJson(WriteDataToFile):
             logger.critical(f"При удалении данных из файла произошла ошибка: {e}")
         else:
             logger.info(f"Данные успешно удалены из файла {self.__file_path}")
+
+    @property
+    def file_path(self) -> str:
+        """Свойство пути к файлу"""
+
+        return self.__file_path
 
 
 if __name__ == "__main__":

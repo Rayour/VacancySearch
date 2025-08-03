@@ -1,10 +1,10 @@
 import os.path
-
-from unittest.mock import patch
-from src.vacancy import Vacancy
-from src.vacancy_list import VacancyList
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
+
+from src.vacancy import Vacancy
+from src.vacancy_list import VacancyList
 
 ROOT_PATH = Path(__file__).resolve().parents[1]
 
@@ -40,12 +40,12 @@ def test_remove_vacancy(vacancy_1: Vacancy, vacancy_2: Vacancy) -> None:
 
 
 @patch("json.load")
-def test_get_data_from_json(mocked_file: Any, vacancies_list_json: list) -> None:
+def test_get_data_from_json(mocked_file: Any, vacancies_list: list) -> None:
     """Функция для тестирования создания вакансий из JSON-файла"""
 
     test_list = VacancyList()
     test_file_path = os.path.join(ROOT_PATH, "tests", "data", "test.json")
-    mocked_file.return_value = vacancies_list_json
+    mocked_file.return_value = vacancies_list
 
     test_list.get_data_from_json(test_file_path)
 

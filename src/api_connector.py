@@ -27,7 +27,7 @@ class ApiConnector(ABC):
     """Абстрактный класс для API взаимодействий"""
 
     @abstractmethod
-    def _get_data(self) -> list:
+    def get_data(self) -> list:
         """Метод для получения данных по API"""
         pass
 
@@ -59,7 +59,7 @@ class HHApiConnector(ApiConnector):
         else:
             return response.json()
 
-    def _get_data(self) -> list:
+    def get_data(self) -> list:
         """Метод для получения данных по API HH"""
         data = []
         max_page = 1

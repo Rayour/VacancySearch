@@ -12,7 +12,7 @@ def user_request() -> None:
     while True:
         user_search = input("Введите ключевое слово для запроса вакансий: ")
         hh_api = HHApiConnector(params={"text": user_search})
-        hh_vacancies = hh_api._get_data()
+        hh_vacancies = hh_api.get_data()
         if len(hh_vacancies) > 0:
             break
         else:

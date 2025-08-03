@@ -1,8 +1,6 @@
 import pytest
+
 from src.vacancy import Vacancy
-from src.vacancy_list import VacancyList
-from src.write_file import WriteDataToJson
-from src.api_connector import HHApiConnector
 
 
 @pytest.fixture
@@ -34,7 +32,7 @@ def vacancy_4() -> Vacancy:
 
 
 @pytest.fixture
-def vacancies_list_json() -> list:
+def vacancies_list() -> list:
     """Фикстура возвращает список вакансий"""
 
     return [
