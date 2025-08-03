@@ -21,7 +21,7 @@ def vacancy_2() -> Vacancy:
 def vacancy_3() -> Vacancy:
     """Фикстура возвращает объект вакансии"""
 
-    return Vacancy("333", "Вакансия 3", "Требования 3", "Обязанности 3", salary_to=3000)
+    return Vacancy("333", "Вакансия 3", "Требования 3", "Обязанности 3", salary_to=1500)
 
 
 @pytest.fixture

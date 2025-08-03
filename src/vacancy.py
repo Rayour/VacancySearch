@@ -84,6 +84,48 @@ class Vacancy:
             logger.warning(f"Идентификатор вакансии ({args[0]}) должен быть строкой")
             raise TypeError(f"Идентификатор вакансии должен быть строкой, передано {args[0]}")
 
+    def __eq__(self, other: Any) -> bool:
+        """Метод равенства вакансий по средней ЗП"""
+
+        if self.__avg_salary:
+            if other.avg_salary:
+                if self.__avg_salary == other.avg_salary:
+                    return True
+                else:
+                    return False
+            else:
+                raise ValueError("Невозможно сравнить вакансии по зарплате")
+        else:
+            raise ValueError("Невозможно сравнить вакансии по зарплате")
+
+    def __lt__(self, other: Any) -> bool:
+        """Метод сравнения вакансий по средней ЗП (меньше)"""
+
+        if self.__avg_salary:
+            if other.avg_salary:
+                if self.__avg_salary < other.avg_salary:
+                    return True
+                else:
+                    return False
+            else:
+                raise ValueError("Невозможно сравнить вакансии по зарплате")
+        else:
+            raise ValueError("Невозможно сравнить вакансии по зарплате")
+
+    def __gt__(self, other: Any) -> bool:
+        """Метод сравнения вакансий по средней ЗП (больше)"""
+
+        if self.__avg_salary:
+            if other.avg_salary:
+                if self.__avg_salary > other.avg_salary:
+                    return True
+                else:
+                    return False
+            else:
+                raise ValueError("Невозможно сравнить вакансии по зарплате")
+        else:
+            raise ValueError("Невозможно сравнить вакансии по зарплате")
+
     @property
     def avg_salary(self) -> int | None:
         """Свойство средней ЗП"""

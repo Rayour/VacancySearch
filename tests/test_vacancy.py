@@ -18,7 +18,7 @@ def test_vacancy_init(
     assert vacancy_1.responsibility == "Обязанности 1"
     assert vacancy_1.avg_salary == 1500
     assert vacancy_2.avg_salary == 2000
-    assert vacancy_3.avg_salary == 3000
+    assert vacancy_3.avg_salary == 1500
 
 
 def test_vacancy_str(vacancy_1: Vacancy) -> None:
@@ -26,6 +26,51 @@ def test_vacancy_str(vacancy_1: Vacancy) -> None:
     print(str(vacancy_1))
     assert str(vacancy_1) == "{'id': '111', 'name': 'Вакансия 1', 'requirement': 'Требования 1', 'responsibility': \
 'Обязанности 1', 'salary_from': 1000, 'salary_to': 2000}"
+
+
+def test_vacancy_eq(
+        vacancy_1: Vacancy,
+        vacancy_2: Vacancy,
+        vacancy_3: Vacancy,
+        vacancy_4: Vacancy) -> None:
+    """Функция тестирования метода сравнения"""
+
+    assert (vacancy_1 == vacancy_2) == False
+    assert (vacancy_1 == vacancy_3) == True
+
+    with pytest.raises(ValueError) as exc_info:
+        vacancy_1 == vacancy_4
+        assert str(exc_info.value) == "Невозможно сравнить вакансии по зарплате"
+
+
+def test_vacancy_lt(
+        vacancy_1: Vacancy,
+        vacancy_2: Vacancy,
+        vacancy_3: Vacancy,
+        vacancy_4: Vacancy) -> None:
+    """Функция тестирования метода сравнения"""
+
+    assert (vacancy_1 < vacancy_2) == True
+    assert (vacancy_1 < vacancy_3) == False
+
+    with pytest.raises(ValueError) as exc_info:
+        vacancy_1 < vacancy_4
+        assert str(exc_info.value) == "Невозможно сравнить вакансии по зарплате"
+
+
+def test_vacancy_gt(
+        vacancy_1: Vacancy,
+        vacancy_2: Vacancy,
+        vacancy_3: Vacancy,
+        vacancy_4: Vacancy) -> None:
+    """Функция тестирования метода сравнения"""
+
+    assert (vacancy_1 > vacancy_2) == False
+    assert (vacancy_2 > vacancy_3) == True
+
+    with pytest.raises(ValueError) as exc_info:
+        vacancy_1 > vacancy_4
+        assert str(exc_info.value) == "Невозможно сравнить вакансии по зарплате"
 
 
 def test_create_vacancy() -> None:
