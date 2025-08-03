@@ -4,6 +4,7 @@ from src.vacancy_list import VacancyList
 from src.write_file import WriteDataToJson
 from src.api_connector import HHApiConnector
 
+
 @pytest.fixture
 def vacancy_1() -> Vacancy:
     """Фикстура возвращает объект вакансии"""
@@ -30,3 +31,35 @@ def vacancy_4() -> Vacancy:
     """Фикстура возвращает объект вакансии"""
 
     return Vacancy("444", "Вакансия 4", "Требования 4", "Обязанности 4")
+
+
+@pytest.fixture
+def vacancies_list_json() -> list:
+    """Фикстура возвращает список вакансий"""
+
+    return [
+        {
+            "id": "123292815",
+            "name": "Mid-level Frontend Engineer",
+            "salary": {
+                "from": 300000,
+                "to": 400000
+            },
+            "snippet": {
+                "requirement": "Опыт разработки адаптивных дизайнов мобильных интерфейсов для финтех-приложений.",
+                "responsibility": "Frontend-разработка и оптимизация: проектировать, создавать и поддерживать..."
+            }
+        },
+        {
+            "id": "123280904",
+            "name": "Программист Python",
+            "salary": {
+                "from": 100000,
+                "to": 300000
+            },
+            "snippet": {
+                "requirement": "Знание <highlighttext>python</highlighttext> и других языков.",
+                "responsibility": None
+            }
+        }
+    ]

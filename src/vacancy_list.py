@@ -32,14 +32,6 @@ class VacancyList:
 
         self.vacancy_list = vacancy_list if vacancy_list else []
 
-    def __str__(self) -> str:
-        """Метод строкового представления списка вакансий"""
-
-        result = ""
-        for vacancy in self.vacancy_list:
-            result += str(vacancy)
-        return f"[{result}]"
-
     def add_vacancy(self, vacancy: Vacancy) -> None:
         """Метод для добавления вакансии в список"""
 

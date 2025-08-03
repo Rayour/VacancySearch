@@ -1,6 +1,7 @@
 import pytest
 from src.vacancy import Vacancy
 
+
 def test_vacancy_init(
         vacancy_1: Vacancy,
         vacancy_2: Vacancy,
@@ -42,4 +43,3 @@ def test_create_vacancy() -> None:
     with pytest.raises(TypeError) as exc_info:
         Vacancy.create_vacancy(123, "Тестовая вакансия", "Требования", "Обязанности", 1000, 2000)
         assert str(exc_info.value) == "Идентификатор вакансии должен быть строкой, передано 123"
-
