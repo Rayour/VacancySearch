@@ -31,6 +31,16 @@ class WriteDataToFile(ABC):
         """Абстрактный метод для записи данных в файл"""
         pass
 
+    @abstractmethod
+    def get_data(self) -> Any:
+        """Абстрактный метод для чтения данных в файла"""
+        pass
+
+    @abstractmethod
+    def delete_data(self) -> None:
+        """Абстрактный метод для удаления данных из файла"""
+        pass
+
 
 class WriteDataToJson(WriteDataToFile):
     """Класс для записи данных в JSON файл"""
@@ -86,6 +96,19 @@ class WriteDataToJson(WriteDataToFile):
             logger.critical(f"При удалении данных из файла произошла ошибка: {e}")
         else:
             logger.info(f"Данные успешно удалены из файла {self.__file_path}")
+
+    def get_data(self) -> Any:
+        """Метод для получения данных из файла"""
+
+        try:
+            with open(os.path.join(ROOT_PATH, self.__file_path), 'r', encoding='utf-8') as file:
+                logger.info(f"Попытка чтения данных из файла {self.__file_path}")
+                data = file.read()
+        except Exception as e:
+            logger.critical(f"При чтении данных из файла произошла ошибка: {e}")
+        else:
+            logger.info(f"Данные успешно прочитаны из файла {self.__file_path}")
+            return data
 
     @property
     def file_path(self) -> str:
