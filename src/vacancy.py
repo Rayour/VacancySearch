@@ -39,7 +39,7 @@ class Vacancy:
                  salary_to: int | None = None) -> None:
         """Метод инициализации вакансии"""
 
-        self.__id = id
+        self.__id = self.__validate_id(id)
         self.__name = name
         self.__requirement = requirement
         self.__responsibility = responsibility
@@ -74,15 +74,21 @@ class Vacancy:
     def create_vacancy(cls, *args: Any, **kwargs: Any) -> Any:
         """Метод создания вакансии с проверкой уникальности и валидацией типа данных идентификатора"""
 
-        if isinstance(args[0], str):
-            if args[0] in cls.vacancies:
-                logger.info(f"Вакансия id={args[0]} уже существует и не будет создана")
-                raise Exception(f"Вакансия с идентификатором id={args[0]} уже существует")
-            else:
-                return cls(*args, **kwargs)
+        if args[0] in cls.vacancies:
+            logger.info(f"Вакансия id={args[0]} уже существует и не будет создана")
+            raise Exception(f"Вакансия с идентификатором id={args[0]} уже существует")
         else:
-            logger.warning(f"Идентификатор вакансии ({args[0]}) должен быть строкой")
-            raise TypeError(f"Идентификатор вакансии должен быть строкой, передано {args[0]}")
+            return cls(*args, **kwargs)
+
+    @staticmethod
+    def __validate_id(id: Any) -> str:
+        """Метод валидации идентификатора"""
+
+        if isinstance(id, str):
+            return id
+        else:
+            logger.warning(f"Идентификатор вакансии ({id}) должен быть строкой")
+            raise TypeError(f"Идентификатор вакансии должен быть строкой, передано {id}")
 
     def __eq__(self, other: Any) -> bool:
         """Метод равенства вакансий по средней ЗП"""

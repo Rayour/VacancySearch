@@ -31,6 +31,10 @@ class ApiConnector(ABC):
         """Метод для получения данных по API"""
         pass
 
+    @abstractmethod
+    def _api_connector(self) -> Any:
+        """Метод для подключения к API"""
+
 
 class HHApiConnector(ApiConnector):
     """Класс для работы с api HH"""
@@ -46,7 +50,7 @@ class HHApiConnector(ApiConnector):
         self.__params = params if params else {}
         self.__headers = headers if headers else {}
 
-    def __api_connector(self) -> Any:
+    def _api_connector(self) -> Any:
         """Метод для подключения к API HH"""
         try:
             logger.info(
@@ -69,7 +73,7 @@ class HHApiConnector(ApiConnector):
         self.__headers["User-Agent"] = "PostmanRuntime/7.44.1"
 
         while self.__params["page"] < max_page:
-            response = self.__api_connector()
+            response = self._api_connector()
             self.__params["page"] += 1
             max_page = response["pages"]
             data.extend(response["items"])
