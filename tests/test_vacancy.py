@@ -35,8 +35,8 @@ def test_vacancy_eq(
         vacancy_4: Vacancy) -> None:
     """Функция тестирования метода сравнения"""
 
-    assert (vacancy_1 == vacancy_2) == False
-    assert (vacancy_1 == vacancy_3) == True
+    assert (vacancy_1 == vacancy_2) is False
+    assert (vacancy_1 == vacancy_3) is True
 
     with pytest.raises(ValueError) as exc_info:
         vacancy_1 == vacancy_4
@@ -50,8 +50,8 @@ def test_vacancy_lt(
         vacancy_4: Vacancy) -> None:
     """Функция тестирования метода сравнения"""
 
-    assert (vacancy_1 < vacancy_2) == True
-    assert (vacancy_1 < vacancy_3) == False
+    assert (vacancy_1 < vacancy_2) is True
+    assert (vacancy_1 < vacancy_3) is False
 
     with pytest.raises(ValueError) as exc_info:
         vacancy_1 < vacancy_4
@@ -65,8 +65,8 @@ def test_vacancy_gt(
         vacancy_4: Vacancy) -> None:
     """Функция тестирования метода сравнения"""
 
-    assert (vacancy_1 > vacancy_2) == False
-    assert (vacancy_2 > vacancy_3) == True
+    assert (vacancy_1 > vacancy_2) is False
+    assert (vacancy_2 > vacancy_3) is True
 
     with pytest.raises(ValueError) as exc_info:
         vacancy_1 > vacancy_4
