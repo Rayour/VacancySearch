@@ -54,12 +54,11 @@ class HHApiConnector(ApiConnector):
         """Метод для подключения к API HH"""
         try:
             logger.info(
-                f"Запрос страницы {self.__params["page"]} c вакансиями по ключевому слову {self.__params["text"]}")
+                f"Запрос страницы {self.__params["page"]} c вакансиями")
             response = requests.get(self.__url, params=self.__params, headers=self.__headers)
             response.raise_for_status()
         except requests.RequestException as e:
-            logger.critical(f"Ошибка при запрос страницы {self.__params["page"]} c вакансиями по ключевому \
-слову {self.__params["text"]}: {e}")
+            logger.critical(f"Ошибка при запросе страницы {self.__params["page"]} c вакансиями: {e}")
         else:
             return response.json()
 
@@ -77,5 +76,23 @@ class HHApiConnector(ApiConnector):
             self.__params["page"] += 1
             max_page = response["pages"]
             data.extend(response["items"])
+
+        return data
+
+    def get_data_by_companies(self, companies: list[str]) -> list:
+        """Метод для получения данных о вакансиях по компаниям по API HH"""
+        data = []
+        for company in companies:
+            logger.info(f"Запрос вакансий компании {company}")
+            self.__params["employer_id"] = company
+            vacancies = self.get_data()
+
+            if vacancies:
+                company_data = {
+                    "company_id": company,
+                    "company_name": vacancies[0]["employer"]["name"],
+                    "vacancies": vacancies
+                }
+                data.append(company_data)
 
         return data

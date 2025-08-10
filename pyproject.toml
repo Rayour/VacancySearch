@@ -9,7 +9,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "requests (>=2.32.4,<3.0.0)",
-    "types-requests (>=2.32.4.20250611,<3.0.0.0)"
+    "types-requests (>=2.32.4.20250611,<3.0.0.0)",
+    "psycopg2 (>=2.9.10,<3.0.0)"
 ]
 
 
@@ -22,6 +23,7 @@ flake8 = "^7.3.0"
 mypy = "^1.16.1"
 isort = "^6.0.1"
 black = "^25.1.0"
+types-psycopg2 = "^2.9.21.20250809"
 
 
 [tool.poetry.group.dev.dependencies]
